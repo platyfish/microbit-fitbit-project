@@ -52,7 +52,7 @@ input.onButtonPressed(Button.A, function () {
 })
 buttonClicks.onButtonHeld(buttonClicks.AorB.B, function () {
     if (Sending_or_changing_channel == 4) {
-        Audio += -1
+        Audio += -2
         music.playTone(220, music.beat(BeatFraction.Whole))
     }
 })
@@ -94,9 +94,12 @@ input.onButtonPressed(Button.B, function () {
 input.onGesture(Gesture.Shake, function () {
     Steps += 1
 })
+input.onLogoEvent(TouchButtonEvent.Pressed, function () {
+    basic.showNumber(Steps)
+})
 buttonClicks.onButtonHeld(buttonClicks.AorB.A, function () {
     if (Sending_or_changing_channel == 4) {
-        Audio += 1
+        Audio += 2
         music.playTone(440, music.beat(BeatFraction.Sixteenth))
     }
 })
@@ -118,7 +121,7 @@ text_list = [
 "Null",
 "Null"
 ]
-let Audio = 255
+let Audio = 127
 let Power_Level = 7
 Sending_or_changing_channel = 1
 Message_to_send = 0
@@ -126,6 +129,7 @@ radio.setGroup(1)
 let Radio_Frequency = 1
 Message_Delay_antispam = 0
 led.setBrightness(255)
+timeanddate.set24HourTime(0, 0, 0)
 basic.clearScreen()
 // Every one second remove one from message delay (antispam), this is the code that counts down the message delay variable.
 loops.everyInterval(1000, function () {
@@ -541,7 +545,7 @@ basic.forever(function () {
 })
 basic.forever(function () {
     while (Sending_or_changing_channel == 4) {
-        basic.pause(2000)
+        basic.pause(1500)
         basic.showNumber(Audio)
     }
 })
