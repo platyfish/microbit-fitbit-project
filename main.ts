@@ -52,7 +52,7 @@ input.onButtonPressed(Button.A, function () {
 })
 buttonClicks.onButtonHeld(buttonClicks.AorB.B, function () {
     if (Sending_or_changing_channel == 4) {
-        Audio += -2
+        Audio += -10
         music.playTone(220, music.beat(BeatFraction.Whole))
     }
 })
@@ -99,7 +99,7 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
 })
 buttonClicks.onButtonHeld(buttonClicks.AorB.A, function () {
     if (Sending_or_changing_channel == 4) {
-        Audio += 2
+        Audio += 10
         music.playTone(440, music.beat(BeatFraction.Sixteenth))
     }
 })
@@ -137,7 +137,7 @@ loops.everyInterval(1000, function () {
 })
 // This is where all the logic is located. This calculates stuff from, "is variable (radio frequency) over 20, and if so, do this. Without this, the micro:bit would have many issues especially with variables that increase or decrease forever. So this is very necessary.
 basic.forever(function () {
-    if (4 < Sending_or_changing_channel) {
+    if (5 < Sending_or_changing_channel) {
         Sending_or_changing_channel = 1
     }
     if (20 < Radio_Frequency) {
