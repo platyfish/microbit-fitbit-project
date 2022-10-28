@@ -1,23 +1,33 @@
 enum RadioMessage {
     message1 = 49434
 }
-// This is the button B code. Same logic applies for this as button A but it has different functions. This one just increases the variable in the mode selected by 1.
-input.onButtonPressed(Button.B, function () {
+// This is button A code. The "ifs" check if the variable "Sending or changing channel?" Is equal to one so it enters channel mode, 2 for message to channel, and 3 for power level.
+input.onButtonPressed(Button.A, function () {
     if (Sending_or_changing_channel == 1) {
-        Radio_Frequency += 1
-        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+        Radio_Frequency += -1
+        music.playTone(220, music.beat(BeatFraction.Sixteenth))
     }
-    if (Sending_or_changing_channel == 2) {
-        Message_to_send += 1
-        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+    // Message delay variable must be under 1 or =0 to be able to send message.
+    if (Sending_or_changing_channel == 2 && Message_Delay_antispam < 1) {
+        // This is the delay code that makes it so you can't send a message, but only send after 10 seconds after sending to prevent spamming.
+        Message_Delay_antispam = 10
+        music.playTone(262, music.beat(BeatFraction.Quarter))
+        music.playTone(494, music.beat(BeatFraction.Quarter))
+        music.playTone(659, music.beat(BeatFraction.Quarter))
+        radio.sendString("" + (text_list[Message_to_send]))
+        radio.sendNumber(Message_to_send)
     }
     if (Sending_or_changing_channel == 3) {
-        Power_Level += 1
-        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+        Power_Level += -1
+        music.playTone(220, music.beat(BeatFraction.Sixteenth))
     }
     if (Sending_or_changing_channel == 4) {
-        Audio += -1
-        music.playTone(220, music.beat(BeatFraction.Sixteenth))
+        Audio += 1
+        music.playTone(440, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 5) {
+        Brightness += 1
+        music.playTone(440, music.beat(BeatFraction.Sixteenth))
     }
 })
 // Emoji List!
@@ -52,6 +62,33 @@ buttonClicks.onButtonHeld(buttonClicks.AorB.B, function () {
         Audio += -10
         music.playTone(220, music.beat(BeatFraction.Whole))
     }
+    if (Sending_or_changing_channel == 5) {
+        Brightness += -10
+        music.playTone(220, music.beat(BeatFraction.Whole))
+    }
+})
+// This is the button B code. Same logic applies for this as button A but it has different functions. This one just increases the variable in the mode selected by 1.
+input.onButtonPressed(Button.B, function () {
+    if (Sending_or_changing_channel == 1) {
+        Radio_Frequency += 1
+        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 2) {
+        Message_to_send += 1
+        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 3) {
+        Power_Level += 1
+        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 4) {
+        Audio += -1
+        music.playTone(220, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 5) {
+        Brightness += -1
+        music.playTone(220, music.beat(BeatFraction.Sixteenth))
+    }
 })
 // This is the code where it shows you the string you have received from someone on the same channel
 radio.onReceivedString(function (receivedString) {
@@ -61,31 +98,6 @@ radio.onReceivedString(function (receivedString) {
                 basic.showString(receivedString)
             }
         }
-    }
-})
-// This is button A code. The "ifs" check if the variable "Sending or changing channel?" Is equal to one so it enters channel mode, 2 for message to channel, and 3 for power level.
-input.onButtonPressed(Button.A, function () {
-    if (Sending_or_changing_channel == 1) {
-        Radio_Frequency += -1
-        music.playTone(220, music.beat(BeatFraction.Sixteenth))
-    }
-    // Message delay variable must be under 1 or =0 to be able to send message.
-    if (Sending_or_changing_channel == 2 && Message_Delay_antispam < 1) {
-        // This is the delay code that makes it so you can't send a message, but only send after 10 seconds after sending to prevent spamming.
-        Message_Delay_antispam = 10
-        music.playTone(262, music.beat(BeatFraction.Quarter))
-        music.playTone(494, music.beat(BeatFraction.Quarter))
-        music.playTone(659, music.beat(BeatFraction.Quarter))
-        radio.sendString("" + (text_list[Message_to_send]))
-        radio.sendNumber(Message_to_send)
-    }
-    if (Sending_or_changing_channel == 3) {
-        Power_Level += -1
-        music.playTone(220, music.beat(BeatFraction.Sixteenth))
-    }
-    if (Sending_or_changing_channel == 4) {
-        Audio += 1
-        music.playTone(440, music.beat(BeatFraction.Sixteenth))
     }
 })
 // Add +1 to "Sending or changing channel?" This therefore switches the mode from channel to send message and from send message to configure signal strength and from signal strength back to channel
@@ -100,6 +112,10 @@ input.onGesture(Gesture.Shake, function () {
 buttonClicks.onButtonHeld(buttonClicks.AorB.A, function () {
     if (Sending_or_changing_channel == 4) {
         Audio += 10
+        music.playTone(440, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 5) {
+        Brightness += 10
         music.playTone(440, music.beat(BeatFraction.Sixteenth))
     }
 })
@@ -129,6 +145,7 @@ radio.setGroup(1)
 let Radio_Frequency = 1
 Message_Delay_antispam = 0
 let Brightness = 200
+led.setDisplayMode(DisplayMode.BlackAndWhite)
 led.setBrightness(Brightness)
 timeanddate.set24HourTime(0, 0, 0)
 basic.clearScreen()
@@ -176,6 +193,23 @@ basic.forever(function () {
     }
     if (Brightness < 20) {
         Brightness = 20
+    }
+})
+basic.forever(function () {
+    if (Sending_or_changing_channel == 5) {
+        basic.showLeds(`
+            # # # # #
+            # # # # #
+            # # # # #
+            # # # # #
+            # # # # #
+            `)
+    }
+})
+basic.forever(function () {
+    while (Sending_or_changing_channel == 4) {
+        basic.pause(1500)
+        basic.showNumber(Audio)
     }
 })
 // Every one second remove one from message delay (antispam), this is the code that counts down the message delay variable.
@@ -549,11 +583,5 @@ basic.forever(function () {
                 . # . # #
                 `)
         }
-    }
-})
-basic.forever(function () {
-    while (Sending_or_changing_channel == 4) {
-        basic.pause(1500)
-        basic.showNumber(Audio)
     }
 })
