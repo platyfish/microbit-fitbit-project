@@ -29,6 +29,10 @@ input.onButtonPressed(Button.A, function () {
         Brightness += 1
         music.playTone(440, music.beat(BeatFraction.Sixteenth))
     }
+    if (Sending_or_changing_channel == 6) {
+        Timer_active = 1
+        timeanddate.set24HourTime(0, 0, 0)
+    }
 })
 // Emoji List!
 radio.onReceivedNumber(function (receivedNumber) {
@@ -89,6 +93,14 @@ input.onButtonPressed(Button.B, function () {
         Brightness += -1
         music.playTone(220, music.beat(BeatFraction.Sixteenth))
     }
+    if (Sending_or_changing_channel == 6) {
+        if (Timer_active == 0) {
+            timeanddate.set24HourTime(0, 0, 0)
+        }
+        Timer_active = 0
+        basic.showString(timeanddate.time(timeanddate.TimeFormat.HHMMSS24hr))
+        timeanddate.set24HourTime(0, 0, 0)
+    }
 })
 // This is the code where it shows you the string you have received from someone on the same channel
 radio.onReceivedString(function (receivedString) {
@@ -121,6 +133,7 @@ buttonClicks.onButtonHeld(buttonClicks.AorB.A, function () {
 })
 // Hello! Welcome to this "simple" micro:bit program, I Andrei am making, basically, what this is, is a simple radio communication software that lets you switch from channels 0-20 to communicate with other microbits, setting your channels on 10 means you send on channel 10 and recieve from channel 10 and the same logic applies to the rest. The chat functions are basic and very short to make up for the 5x5 led screen of the micro:bit, I like the micro:bit having this limitation as it teaches you to think outside of the box. For example, the screen shows slowly so, if one were to quickly spam the channels, then it'd show their current channel very slowly, so, I'll make my own 20 led pixel screens to show which channel you are on. The default channel is 1. You can change the "Null" blocks to something else that you want to put there, so far, "Hello!", "No", "Yes" text messages exist. But you can allocate only 3,4 and 5 because the rest haven't been programmed yet. This place is also where everything gets initialized before the program fully starts
 let Steps = 0
+let Timer_active = 0
 let Message_Delay_antispam = 0
 let Message_to_send = 0
 let Sending_or_changing_channel = 0
@@ -145,13 +158,21 @@ radio.setGroup(1)
 let Radio_Frequency = 1
 Message_Delay_antispam = 0
 let Brightness = 200
+Timer_active = 0
 led.setDisplayMode(DisplayMode.BlackAndWhite)
 led.setBrightness(Brightness)
 timeanddate.set24HourTime(0, 0, 0)
 basic.clearScreen()
+// Every one second remove one from message delay (antispam), this is the code that counts down the message delay variable.
+loops.everyInterval(1000, function () {
+    Message_Delay_antispam += -1
+    if (Timer_active == 1) {
+        music.playTone(294, music.beat(BeatFraction.Sixteenth))
+    }
+})
 // This is where all the logic is located. This calculates stuff from, "is variable (radio frequency) over 20, and if so, do this. Without this, the micro:bit would have many issues especially with variables that increase or decrease forever. So this is very necessary.
 basic.forever(function () {
-    if (5 < Sending_or_changing_channel) {
+    if (6 < Sending_or_changing_channel) {
         Sending_or_changing_channel = 1
     }
     if (20 < Radio_Frequency) {
@@ -176,16 +197,10 @@ basic.forever(function () {
     }
     radio.setTransmitPower(Power_Level)
     if (Power_Level < 0) {
-        Power_Level = 1
-        basic.showIcon(IconNames.No)
-        Power_Level += -1
-        music.playTone(175, music.beat(BeatFraction.Quarter))
+        Power_Level = 7
     }
     if (7 < Power_Level) {
-        Power_Level = 6
-        basic.showIcon(IconNames.No)
-        Power_Level += 1
-        music.playTone(175, music.beat(BeatFraction.Quarter))
+        Power_Level = 0
     }
     led.setBrightness(Brightness)
     if (255 < Brightness) {
@@ -193,6 +208,9 @@ basic.forever(function () {
     }
     if (Brightness < 20) {
         Brightness = 20
+    }
+    if (Sending_or_changing_channel == 6) {
+    	
     }
 })
 basic.forever(function () {
@@ -211,10 +229,6 @@ basic.forever(function () {
         basic.pause(1500)
         basic.showNumber(Audio)
     }
-})
-// Every one second remove one from message delay (antispam), this is the code that counts down the message delay variable.
-loops.everyInterval(1000, function () {
-    Message_Delay_antispam += -1
 })
 // This is the display code for power level. It also, just like it's message and channel brothers. It uses the same principle for the display as them.
 basic.forever(function () {
