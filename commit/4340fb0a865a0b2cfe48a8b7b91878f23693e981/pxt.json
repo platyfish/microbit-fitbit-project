@@ -1,0 +1,25 @@
+{
+    "name": "microbit-fitbit-project-commit-4340fb0a865a0b2cfe48a8b7b91878f23693e981",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "microphone": "*",
+        "microbit-fitbit-project": "github:platyfish/microbit-fitbit-project"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "5.0.12",
+        "targetId": "microbit"
+    },
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "blocksprj"
+}
