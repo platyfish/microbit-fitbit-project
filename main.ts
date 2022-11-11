@@ -1,6 +1,97 @@
 enum RadioMessage {
     message1 = 49434
 }
+// This is the button B code. Same logic applies for this as button A but it has different functions. This one just increases the variable in the mode selected by 1.
+input.onButtonPressed(Button.B, function () {
+    if (Sending_or_changing_channel == 1) {
+        Radio_Frequency += 1
+        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 2) {
+        Message_to_send += 1
+        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 3) {
+        Power_Level += 1
+        music.playTone(698, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 4) {
+        Audio += -1
+        music.playTone(220, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 5) {
+        Brightness += -1
+        music.playTone(220, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 6) {
+        if (Timer_active == 0) {
+            timeanddate.set24HourTime(0, 0, 0)
+        }
+        Timer_active = 0
+        basic.showString(timeanddate.time(timeanddate.TimeFormat.HHMMSS24hr))
+        timeanddate.set24HourTime(0, 0, 0)
+    }
+})
+buttonClicks.onButtonHeld(buttonClicks.AorB.A, function () {
+    if (Sending_or_changing_channel == 4) {
+        Audio += 10
+        music.playTone(440, music.beat(BeatFraction.Sixteenth))
+    }
+    if (Sending_or_changing_channel == 5) {
+        Brightness += 10
+        music.playTone(440, music.beat(BeatFraction.Sixteenth))
+    }
+})
+buttonClicks.onButtonHeld(buttonClicks.AorB.B, function () {
+    if (Sending_or_changing_channel == 4) {
+        Audio += -10
+        music.playTone(220, music.beat(BeatFraction.Whole))
+    }
+    if (Sending_or_changing_channel == 5) {
+        Brightness += -10
+        music.playTone(220, music.beat(BeatFraction.Whole))
+    }
+})
+buttonClicks.onButtonDoubleClicked(buttonClicks.AorB.A, function () {
+    basic.showNumber(Audio)
+})
+// Emoji List!
+radio.onReceivedNumber(function (receivedNumber) {
+    if (receivedNumber == 3) {
+        basic.showLeds(`
+            # # . # #
+            # # . # #
+            . . . . .
+            # . . . #
+            . # # # .
+            `)
+    }
+    if (receivedNumber == 4) {
+        basic.showLeds(`
+            # # . # #
+            # # . # #
+            . # # # .
+            # . . . #
+            . # # # .
+            `)
+    }
+    if (receivedNumber == 5) {
+        basic.showIcon(IconNames.Heart)
+    }
+})
+input.onLogoEvent(TouchButtonEvent.Pressed, function () {
+    basic.showNumber(Steps)
+})
+// This is the code where it shows you the string you have received from someone on the same channel
+radio.onReceivedString(function (receivedString) {
+    if (Message_to_send != 3) {
+        if (Message_to_send != 4) {
+            if (Message_to_send != 5) {
+                basic.showString(receivedString)
+            }
+        }
+    }
+})
 // This is button A code. The "ifs" check if the variable "Sending or changing channel?" Is equal to one so it enters channel mode, 2 for message to channel, and 3 for power level.
 input.onButtonPressed(Button.A, function () {
     if (Sending_or_changing_channel == 1) {
@@ -34,84 +125,6 @@ input.onButtonPressed(Button.A, function () {
         timeanddate.set24HourTime(0, 0, 0)
     }
 })
-// Emoji List!
-radio.onReceivedNumber(function (receivedNumber) {
-    if (receivedNumber == 3) {
-        basic.showLeds(`
-            # # . # #
-            # # . # #
-            . . . . .
-            # . . . #
-            . # # # .
-            `)
-    }
-    if (receivedNumber == 4) {
-        basic.showLeds(`
-            # # . # #
-            # # . # #
-            . # # # .
-            # . . . #
-            . # # # .
-            `)
-    }
-    if (receivedNumber == 5) {
-        basic.showIcon(IconNames.Heart)
-    }
-})
-input.onLogoEvent(TouchButtonEvent.Pressed, function () {
-    basic.showNumber(Steps)
-})
-buttonClicks.onButtonHeld(buttonClicks.AorB.B, function () {
-    if (Sending_or_changing_channel == 4) {
-        Audio += -10
-        music.playTone(220, music.beat(BeatFraction.Whole))
-    }
-    if (Sending_or_changing_channel == 5) {
-        Brightness += -10
-        music.playTone(220, music.beat(BeatFraction.Whole))
-    }
-})
-// This is the button B code. Same logic applies for this as button A but it has different functions. This one just increases the variable in the mode selected by 1.
-input.onButtonPressed(Button.B, function () {
-    if (Sending_or_changing_channel == 1) {
-        Radio_Frequency += 1
-        music.playTone(698, music.beat(BeatFraction.Sixteenth))
-    }
-    if (Sending_or_changing_channel == 2) {
-        Message_to_send += 1
-        music.playTone(698, music.beat(BeatFraction.Sixteenth))
-    }
-    if (Sending_or_changing_channel == 3) {
-        Power_Level += 1
-        music.playTone(698, music.beat(BeatFraction.Sixteenth))
-    }
-    if (Sending_or_changing_channel == 4) {
-        Audio += -1
-        music.playTone(220, music.beat(BeatFraction.Sixteenth))
-    }
-    if (Sending_or_changing_channel == 5) {
-        Brightness += -1
-        music.playTone(220, music.beat(BeatFraction.Sixteenth))
-    }
-    if (Sending_or_changing_channel == 6) {
-        if (Timer_active == 0) {
-            timeanddate.set24HourTime(0, 0, 0)
-        }
-        Timer_active = 0
-        basic.showString(timeanddate.time(timeanddate.TimeFormat.HHMMSS24hr))
-        timeanddate.set24HourTime(0, 0, 0)
-    }
-})
-// This is the code where it shows you the string you have received from someone on the same channel
-radio.onReceivedString(function (receivedString) {
-    if (Message_to_send != 3) {
-        if (Message_to_send != 4) {
-            if (Message_to_send != 5) {
-                basic.showString(receivedString)
-            }
-        }
-    }
-})
 // Add +1 to "Sending or changing channel?" This therefore switches the mode from channel to send message and from send message to configure signal strength and from signal strength back to channel
 input.onButtonPressed(Button.AB, function () {
     Sending_or_changing_channel += 1
@@ -121,22 +134,13 @@ input.onButtonPressed(Button.AB, function () {
 input.onGesture(Gesture.Shake, function () {
     Steps += 1
 })
-buttonClicks.onButtonHeld(buttonClicks.AorB.A, function () {
-    if (Sending_or_changing_channel == 4) {
-        Audio += 10
-        music.playTone(440, music.beat(BeatFraction.Sixteenth))
-    }
-    if (Sending_or_changing_channel == 5) {
-        Brightness += 10
-        music.playTone(440, music.beat(BeatFraction.Sixteenth))
-    }
-})
 // Hello! Welcome to this "simple" micro:bit program, I Andrei am making, basically, what this is, is a simple radio communication software that lets you switch from channels 0-20 to communicate with other microbits, setting your channels on 10 means you send on channel 10 and recieve from channel 10 and the same logic applies to the rest. The chat functions are basic and very short to make up for the 5x5 led screen of the micro:bit, I like the micro:bit having this limitation as it teaches you to think outside of the box. For example, the screen shows slowly so, if one were to quickly spam the channels, then it'd show their current channel very slowly, so, I'll make my own 20 led pixel screens to show which channel you are on. The default channel is 1. You can change the "Null" blocks to something else that you want to put there, so far, "Hello!", "No", "Yes" text messages exist. But you can allocate only 3,4 and 5 because the rest haven't been programmed yet. This place is also where everything gets initialized before the program fully starts
 let Steps = 0
 let Timer_active = 0
 let Message_Delay_antispam = 0
 let Message_to_send = 0
 let Sending_or_changing_channel = 0
+let Audio = 0
 let text_list: string[] = []
 text_list = [
 "Hello!",
@@ -150,7 +154,7 @@ text_list = [
 "Null",
 "Null"
 ]
-let Audio = 127
+Audio = 127
 let Power_Level = 7
 Sending_or_changing_channel = 1
 Message_to_send = 0
@@ -214,6 +218,17 @@ basic.forever(function () {
     }
 })
 basic.forever(function () {
+    if (Sending_or_changing_channel == 6) {
+        basic.showLeds(`
+            . # # # .
+            . . # . .
+            . # # # .
+            . # # # .
+            . # # # .
+            `)
+    }
+})
+basic.forever(function () {
     if (Sending_or_changing_channel == 5) {
         basic.showLeds(`
             # # # # #
@@ -226,8 +241,15 @@ basic.forever(function () {
 })
 basic.forever(function () {
     while (Sending_or_changing_channel == 4) {
+        basic.showLeds(`
+            . . . # .
+            # # . . #
+            # # # . #
+            # # . . #
+            . . . # .
+            `)
         basic.pause(1500)
-        basic.showNumber(Audio)
+        music.playTone(262, music.beat(BeatFraction.Eighth))
     }
 })
 // This is the display code for power level. It also, just like it's message and channel brothers. It uses the same principle for the display as them.
