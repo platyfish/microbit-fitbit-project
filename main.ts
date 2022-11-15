@@ -241,13 +241,56 @@ basic.forever(function () {
 })
 basic.forever(function () {
     while (Sending_or_changing_channel == 4) {
-        basic.showLeds(`
-            . . . # .
-            # # . . #
-            # # # . #
-            # # . . #
-            . . . # .
-            `)
+        if (1 >= Audio) {
+            basic.showLeds(`
+                . . . . .
+                . # . # .
+                . . # . .
+                . # . # .
+                . . . . .
+                `)
+            break;
+        }
+        if (75 >= Audio) {
+            basic.showLeds(`
+                . . . . .
+                # # . . .
+                # # . # .
+                # # . . .
+                . . . . .
+                `)
+            break;
+        }
+        if (128 >= Audio) {
+            basic.showLeds(`
+                . . . . .
+                # # . # .
+                # # . # .
+                # # . # .
+                . . . . .
+                `)
+            break;
+        }
+        if (200 >= Audio) {
+            basic.showLeds(`
+                . . # . .
+                # # . # .
+                # # . # .
+                # # . # .
+                . . # . .
+                `)
+            break;
+        }
+        if (250 >= Audio) {
+            basic.showLeds(`
+                . . . # .
+                # # . . #
+                # # # . #
+                # # . . #
+                . . . # .
+                `)
+            break;
+        }
         basic.pause(1500)
         music.playTone(262, music.beat(BeatFraction.Eighth))
     }
